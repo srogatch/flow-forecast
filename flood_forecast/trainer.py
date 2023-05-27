@@ -115,7 +115,8 @@ def train_function(model_type: str, params: Dict) -> PyTorchForecast:
             dataset_params["training_path"],
             dataset_params["validation_path"],
             dataset_params["test_path"],
-            params)
+            params,
+        )
         class2 = False if trained_model.params["dataset_params"]["class"] != "GeneralClassificationLoader" else True
         takes_target = False
         if "takes_target" in trained_model.params:

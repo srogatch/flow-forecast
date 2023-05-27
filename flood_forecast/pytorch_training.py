@@ -12,6 +12,7 @@ from flood_forecast.basic.linear_regression import simple_decode
 from flood_forecast.training_utils import EarlyStopper
 from flood_forecast.custom.custom_opt import GaussianLoss, MASELoss
 from torch.nn import CrossEntropyLoss
+from tqdm import tqdm
 
 
 def multi_crit(crit_multi: List, output, labels, valid=None):
@@ -187,6 +188,7 @@ def train_transformer_style(
             classification=class2)
         if valid == 0.0:
             raise ValueError("Error validation loss is zero there is a problem with the validator.")
+        print(f'Validation loss: {valid}')
         if use_wandb:
             wandb.log({'epoch': epoch, 'loss': total_loss})
         epoch_params = {
@@ -385,7 +387,7 @@ def torch_single_train(model: PyTorchForecast,
     output_std = None
     mulit_targets_copy = multi_targets
     running_loss = 0.0
-    for src, trg in data_loader:
+    for src, trg in tqdm(data_loader):
         opt.zero_grad()
         if meta_data_model:
             representation = meta_data_model.model.generate_representation(meta_data_model_representation)
@@ -508,7 +510,7 @@ def compute_validation(validation_loader: DataLoader,
         loss_unscaled_full = 0.0
         label_list = []
         mod_output_list = []
-        for src, targ in validation_loader:
+        for src, targ in tqdm(validation_loader):
             src = src if isinstance(src, list) else src.to(device)
             targ = targ if isinstance(targ, list) else targ.to(device)
             # targ = targ if isinstance(targ, list) else targ.to(device)

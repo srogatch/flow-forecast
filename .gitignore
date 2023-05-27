@@ -13,3 +13,7 @@ mypy
 *.png
 *.svf
 *.svg
+.idea/
+Trading/
+model_save/
+temp_df.csv
